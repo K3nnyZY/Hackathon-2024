@@ -20,7 +20,7 @@ img {
 .header-container {
   display: flex;
   justify-content: center;
-  border-bottom: 2px solid #7fb2e2;
+  border-bottom: 3px solid #7fb2e2;
   margin-bottom: 50px;
 }
 
@@ -33,12 +33,14 @@ img {
 }
 
 .chat-container {
-  padding-left: 80px;
+  padding-left: 200px;
   padding-right: 80px;
   font-size: 18px;
   margin-bottom: 40px;
   height: 450px;
   overflow: auto;
+  overflow-x: auto;
+  max-width: 100%;
 }
 
 .user {
@@ -65,9 +67,8 @@ img {
   border-radius: 5px;
 }
 
-/* Define scrollbar hover style */
 ::-webkit-scrollbar-thumb:hover {
-  background: #555; /* Change the background color of the scrollbar thumb on hover */
+  background: #555;
 }
 
 .input-text {

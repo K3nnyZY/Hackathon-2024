@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Logo from "/Logo.png";
 import "./App.css";
+import axios from "axios";
 
 function App() {
   const [input, setInput] = useState("");
@@ -9,8 +10,17 @@ function App() {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (input !== "") {
+      axios
+        .post("http://localhost:5000/model", { text: input })
+        .then((response) => {
+          console.log(response);
+          setDisplay([
+            ...display,
+            { user: "Usuario", message: input },
+            { user: "Franch", message: response.data.response },
+          ]);
+        });
       setInput("");
-      setDisplay([...display, { user: "Usuario", message: input }]);
     }
   };
 
