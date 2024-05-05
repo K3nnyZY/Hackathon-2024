@@ -6,19 +6,30 @@ import axios from "axios";
 function App() {
   const [input, setInput] = useState("");
   const [display, setDisplay] = useState([]);
+  const [isPending, setIsPending] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setIsPending(true);
     if (input !== "") {
       axios
-        .post("http://localhost:5000/model", { text: input })
+        .post("https://hackathon-2024-backend-1:5000/model", { text: input })
         .then((response) => {
-          console.log(response);
           setDisplay([
             ...display,
             { user: "Usuario", message: input },
             { user: "Franch", message: response.data.response },
           ]);
+          setIsPending(false);
+        })
+        .catch((error) => {
+          console.error(error);
+          setDisplay([
+            ...display,
+            { user: "Usuario", message: input },
+            { user: "Franch", message: "Error al obtener una respuesta" },
+          ]);
+          setIsPending(false);
         });
       setInput("");
     }
@@ -49,6 +60,12 @@ function App() {
             </div>
           );
         })}
+        {isPending && (
+          <div className="loading-container">
+            <div className="loading-message">Loading...</div>
+            <div className="loading-spinner"></div>
+          </div>
+        )}
       </div>
 
       <form onSubmit={handleSubmit} className="input-text">
