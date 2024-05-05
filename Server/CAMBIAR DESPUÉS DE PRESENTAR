@@ -13,7 +13,7 @@ def MakeResponse():
     text = input.get('text')
     return make_response(jsonify({"response": create_response(text)}), 200)
     
-client = OpenAI(api_key="")
+client = OpenAI(api_key="sk-proj-kjioG5gWWvY0xyRHydkMT3BlbkFJYMnyl2PfOzXazC9pwXXS")
 
 historial = []
 def create_response(input_query):
