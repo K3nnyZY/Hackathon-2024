@@ -16,7 +16,7 @@ def MakeResponse():
 
 def create_response(input_query):
     query = input_query
-    client = OpenAI(api_key="YOUR_API_KEY")
+    client = OpenAI(api_key="")
     pdf_path = os.path.join(os.getcwd(), "app/Asperger.pdf")
     with pdfplumber.open(pdf_path) as pdf:
         text = ""
