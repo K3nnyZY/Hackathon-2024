@@ -13,28 +13,37 @@ def MakeResponse():
     text = input.get('text')
     return make_response(jsonify({"response": create_response(text)}), 200)
     
+client = OpenAI(api_key="")
 
+historial = []
 def create_response(input_query):
-    query = input_query
-    client = OpenAI(api_key="")
-    pdf_path = os.path.join(os.getcwd(), "app/Asperger.pdf")
+    pdf_path = os.path.join(os.getcwd(), "app\\\\Asperger.pdf")
+    
+    # Cargar el contenido del PDF
     with pdfplumber.open(pdf_path) as pdf:
-        text = ""
-        for page in pdf.pages:
-            text += page.extract_text()
+        texto = "".join(page.extract_text() for page in pdf.pages)
 
-    chunks = [text[i:i + 1000] for i in range(0, len(text), 1000)]
-    context = "\n\n".join(chunks[:2])
+    # Crear contexto desde el historial
+    contexto_historial = "\n\n".join(historial[-5:])  # Usamos las últimas 5 interacciones como contexto
 
-    messages = [
+    # Añadir el nuevo input a la memoria
+    historial.append(f"Usuario: {input_query}")
+
+    # Crear la lista de mensajes
+    mensajes = [
         {"role": "system", "content": "You are a helpful assistant using PDF resources."},
-        {"role": "user", "content": query},
-        {"role": "system", "content": f"PDF Context: {context}"}
+        {"role": "system", "content": f"Historial: {contexto_historial}"},
+        {"role": "user", "content": input_query},
+        {"role": "system", "content": f"PDF Context: {texto[:1000]}"}
     ]
 
-    response = client.chat.completions.create(
+    # Generar respuesta con el modelo
+    respuesta = client.chat.completions.create(
         model="gpt-3.5-turbo",
-        messages=messages
+        messages=mensajes
     )
 
-    return response.choices[0].message.content
+    # Guardar la respuesta generada en el historial
+    historial.append(f"Asistente: {respuesta.choices[0].message.content}")
+
+    return respuesta.choices[0].message.content
